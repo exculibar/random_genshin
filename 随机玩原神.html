@@ -143,6 +143,20 @@
                 bottom: 0;
                 width: 100%; */
             }
+            .wepon-box .refine {
+                position: absolute;
+                top: -3px;
+                left: -2px;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: #f00000;
+                color: #fff;
+                border-radius: 5px;
+                transform:scale(.55)
+            }
 
             #character-container, #wepon-container, #relic-container {
                 display: flex;
@@ -200,6 +214,17 @@
                 flex-wrap: wrap;
                 align-content: flex-start;
             }
+            .reset-btn {
+                height: 40px;
+                padding: 3px 15px;
+                background-color: #fff;
+                color: #000;
+                border: 2px solid #000;
+            }
+            .reset-btn:hover {
+                background-color: #f00000;
+                color: #fff;
+            }
         </style>
     </head>
     <body>
@@ -215,8 +240,9 @@
                 <div id="luckly-character">
 
                 </div>
-                <div style="flex:1;">
-                    <div id="character-pe"></div>
+                <div style="flex:1; padding-top: 20px;">
+                    <center><button type="button" class="reset-btn" id="resetCharacters">重置角色选择</button></center>
+                    <div id="character-pe" style="padding-top: 10px"></div>
                     <div id="character-history" class="history">
                         <div style="height: 100px;"></div>
                     </div>
@@ -244,6 +270,8 @@
                             <option>长柄武器</option>
                             <option>法器</option>
                         </select>
+                        <button type="button" class="reset-btn" style="margin-left: 10px" id="resetCurrentWepons">重置当前武器选择</button>
+                        <button type="button" class="reset-btn" style="margin-left: 40px;background-color: #f00000;color:#fff" id="resetAllWepons">重置所有武器选择</button>
                     </center>
                     <div id="wepon-pe" style="padding-top:10px"></div>
                     <div id="wepon-history" class="history">
@@ -286,11 +314,15 @@
         }
         const oriRelics = [{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2022/03/29/75833613/872ff37191dc3d180275991063cd538f_8810869461424699328.png?x-oss-process=image/quality,q_75/resize,s_120","name":"辰砂往生录"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2022/03/29/75833613/4e491ffc7e94406ab3bc3450a8143ae1_5898552758612058289.png?x-oss-process=image/quality,q_75/resize,s_120","name":"来歆余响"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/11/24/76373921/15578a84f89d42989ffcfc845860e2aa_8395600465406729907.png?x-oss-process=image/quality,q_75/resize,s_120","name":"华馆梦醒形骸记"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/11/24/76373921/a1d21c923a43fad2a7887080142c7882_2680672754339617590.png?x-oss-process=image/quality,q_75/resize,s_120","name":"海染砗磲"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/08/05/15363053/913524213438cd51f0db346a91d48fde_3247012956931428420.png?x-oss-process=image/quality,q_75/resize,s_120","name":"绝缘之旗印"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/08/05/15363053/75478596230f46e7324b17e58ec41b16_464974456051132759.png?x-oss-process=image/quality,q_75/resize,s_120","name":"追忆之注连"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/05/20/16314655/5bc28d41144bc84dad1c5bc5d05b7767_7626689243920624349.png?x-oss-process=image/quality,q_75/resize,s_120","name":"千岩牢固"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/05/20/75276545/b61e4cddc92193549f7879865c7a7af7_3598719868822546601.png?x-oss-process=image/quality,q_75/resize,s_120","name":"苍白之火"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/27/76373921/8de850cbb0a5a6e4aeedd9992a66d253_1421690540950343464.png?x-oss-process=image/quality,q_75/resize,s_120","name":"平息鸣雷的尊者"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/07/76373921/c190ef03ac66983357983509dcb18851_6350402605875596733.png?x-oss-process=image/quality,q_75/resize,s_120","name":"炽烈的炎之魔女"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/27/76373921/2846e3cca9387f0664bb4c9d9d8ad74e_5698650162673983894.png?x-oss-process=image/quality,q_75/resize,s_120","name":"流浪大地的乐团"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/27/76373921/3b3bc810a70785d9da63bcd0c4c41c84_2089739443427221621.png?x-oss-process=image/quality,q_75/resize,s_120","name":"染血的骑士道"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/27/76373921/7e24e8ec10ff452a29a6569d22f76841_6063073450358659215.png?x-oss-process=image/quality,q_75/resize,s_120","name":"被怜爱的少女"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/27/76373921/f9da339394273df4d0788154b347960e_6942369892103403318.png?x-oss-process=image/quality,q_75/resize,s_120","name":"角斗士的终幕礼"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/08/20738632/70700688382863e1cc65108b0d95035a_1256856949669930889.png?x-oss-process=image/quality,q_75/resize,s_120","name":"渡过烈火的贤人"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/16/20738632/ed34a7c93f17c00551bce08c244e15cc_3795918138643596581.png?x-oss-process=image/quality,q_75/resize,s_120","name":"悠古的磐岩"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/08/76373921/29f9e39b033a3c9948ad936c86015230_339973298257650372.png?x-oss-process=image/quality,q_75/resize,s_120","name":"如雷的盛怒"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/08/76373921/85f256bc11174ced884fe879f7b89837_4932243165736958138.jpg?x-oss-process=image/quality,q_75/resize,s_120","name":"沉沦之心"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/16/20738632/78593669dc939493f0f050d5f72e9490_197788604179977225.png?x-oss-process=image/quality,q_75/resize,s_120","name":"逆飞的流星"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/03/02/76373921/ea7d6b8a60998457d770b06a181c9adf_9181213503973007124.png?x-oss-process=image/quality,q_75/resize,s_120","name":"昔日宗室之仪"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/08/76373921/ae68bc60a8cbe70c4eeaa1e93c83539a_8639909691947928213.png?x-oss-process=image/quality,q_75/resize,s_120","name":"翠绿之影"},{"pic":"https://uploadstatic.mihoyo.com/ys-obc/2021/02/08/76373921/536e21d5580b6185a594e88664a59db9_2765213114928943229.jpg?x-oss-process=image/quality,q_75/resize,s_120","name":"冰风迷途的勇士"}]
 
+        var _characters_ = []
         var characters = []
         var wepons = []
+        var _wepons_ = []
+        var weponType = ''
         var relics = []
 
-        const colors = [ '#fac4a4', '#faed88',  '#a1c5f9', '#53ad85', '#7b77fa',  '#efa6a9', ]
+        const colors = [ '#fac4a4', '#faed88',  '#a1c5f9', '#53ad85', '#7b77fa',  '#efa6a9',]
+        const colors2 = [ '#fac4a4', '#faed88',  '#a1c5f9', '#53ad85', '#7b77fa',  '#efa6a9', '#ff6c37']
         const speeds = [100, 90, 80, 72, 64, 55, 41, 33, 20, 12, 8, 5, 3, 2, 2, 1, 1, 1, .5, .5, 0]
         
         var currentAngle = 0
@@ -312,18 +344,89 @@
             return this
         }
 
+        // function makeWeponList(localWepons, defaultWepons) {
+        //     const newWepons = [...defaultWepons]
+        //     for (const w of newWepons) {
+
+        //     }
+        // }
+
+        function resetWepons(all) {
+            if (all) {
+                if (confirm('确定要重置所有武器选择吗?')) {
+                    window.localStorage.removeItem('wepons.单手剑')
+                    window.localStorage.removeItem('wepons.双手剑')
+                    window.localStorage.removeItem('wepons.弓')
+                    window.localStorage.removeItem('wepons.长柄武器')
+                    window.localStorage.removeItem('wepons.法器')
+
+                    window.location.reload()
+                }
+            } else {
+                if (confirm(`确定要重置【${weponType}】武器选择吗?`)) {
+                    window.localStorage.removeItem(`wepons.${weponType}`)
+
+                    window.location.reload()
+                }
+            }
+            
+        }
+
+        function resetCharacters(all) {
+            if (confirm('确定要角色选择吗?')) {
+                window.localStorage.removeItem('characters')
+
+                window.location.reload()
+            }
+        }
+
         window.addEventListener('load', () => {
+
+            document.getElementById('resetCharacters').addEventListener('click', () => {
+                resetCharacters()
+            })
+            document.getElementById('resetCurrentWepons').addEventListener('click', () => {
+                resetWepons()
+            })
+            document.getElementById('resetAllWepons').addEventListener('click', () => {
+                resetWepons(true)
+            })
+
+            const localWeponType = window.localStorage.getItem('weponType')
+            const localWepons = {
+                '单手剑': window.localStorage.getItem(`wepons.单手剑`),
+                '双手剑': window.localStorage.getItem('wepons.双手剑'),
+                '弓': window.localStorage.getItem('wepons.弓'),
+                '长柄武器': window.localStorage.getItem('wepons.长柄武器'),
+                '法器': window.localStorage.getItem('wepons.法器')
+            }
+            const localCharacters = window.localStorage.getItem('characters')
+
+            _characters_ = localCharacters ? JSON.parse(localCharacters) : [...oriCharacters] 
             characters = [...oriCharacters]
-            wepons = [...oriWepons['单手剑']]
+            weponType = localWeponType ? localWeponType : '单手剑'
+            document.getElementById('wepon-picker').value = weponType
+            _wepons_ = localWepons[weponType] ? JSON.parse(localWepons[weponType]) : [...oriWepons[weponType]]
+            wepons = [...oriWepons[weponType]]
             relics = [...oriRelics]
 
             const ctx = document.getElementById('character-disk-spanning-canvas').getContext('2d')
             ctx.translate(300, 300)
 
             const pe = document.getElementById('character-pe')
+            // console.log(_characters_.length)
+            
             characters.forEach(c => {
                 const cBox = document.createElement('div')
-                cBox.setAttribute('class', 'character-box')
+                const _characterIdx_ = _characters_.findIndex(cx => cx.name == c.name)
+                if (_characterIdx_ >= 0) {
+                    // console.log(_characterIdx_)
+                    cBox.setAttribute('class', 'character-box')
+                } else {
+                    // console.log(c.name)
+                    cBox.setAttribute('class', 'character-box banned')
+                }
+                // cBox.setAttribute('class', 'character-box')
                 cBox.innerHTML = `
                     <img class="avatar" src="${c.avatar}">
                     <div class="name">${c.name}</div>
@@ -334,14 +437,17 @@
                     const classStr = cBox.getAttribute('class')
                     if (classStr.indexOf('banned') > 0) {
                         cBox.setAttribute('class', classStr.replace('banned', ''))
-                        characters.push(c)
+                        _characters_.push(c)
                     } else {
                         cBox.setAttribute('class', `${classStr} banned`)
-                        const idx = characters.indexOf(c)
-                        characters.splice(idx,1)
+                        const idx = _characters_.indexOf(c)
+                        if (idx >= 0) {
+                            _characters_.splice(idx,1)
+                        }
                     }
-                    itemAngle = 360 / characters.length 
-                    draw(ctx, itemAngle, characters)
+                    itemAngle = 360 / _characters_.length 
+                    draw(ctx, itemAngle, _characters_)
+                    window.localStorage.setItem(`characters`, JSON.stringify(_characters_))
                 })
             })
 
@@ -353,7 +459,7 @@
                 const initRotateAngle = Math.random() * 200
                 ctx.rotate(initRotateAngle * Math.PI / 180)
                 currentAngle += initRotateAngle
-                draw(ctx, itemAngle, characters)
+                draw(ctx, itemAngle, _characters_)
                 const timer = setInterval(() => {
                     let speed = speeds[speedIdx]
                     if (speed === 0) {
@@ -371,8 +477,10 @@
                         document.getElementById('luckly-character').querySelector('.link').addEventListener('click', () => {
                             // cBox.setAttribute('class', `${classStr} banned`)
                             // console.log('xx')
-                            const idx = characters.indexOf(c)
-                            characters.splice(idx,1)
+                            const idx = _characters_.indexOf(c)
+                            if (idx >= 0) {
+                                _characters_.splice(idx,1)
+                            }
 
                             document.getElementById('luckly-character').innerHTML = ''
                             document.getElementById('character-history').innerHTML += `
@@ -384,8 +492,8 @@
                                 </div>
                             `
                             
-                            itemAngle = 360 / characters.length 
-                            draw(ctx, itemAngle, characters)
+                            itemAngle = 360 / _characters_.length 
+                            draw(ctx, itemAngle, _characters_)
 
 
                         })
@@ -395,7 +503,7 @@
                         const rdSpeed = speed > 10 ? (speed + Math.random() * 10) : speed
                         ctx.rotate(rdSpeed *Math.PI / 180)
                         currentAngle += rdSpeed
-                        draw(ctx, itemAngle, characters)
+                        draw(ctx, itemAngle, _characters_)
                     }
                     secTotal += 100
                     if (secTotal > 300) {
@@ -406,8 +514,8 @@
                 }, 100)
             })
 
-            itemAngle = 360 / characters.length 
-            draw(ctx, itemAngle, characters)
+            itemAngle = 360 / _characters_.length 
+            draw(ctx, itemAngle, _characters_)
             ////////////////////////////////////////////////////
             ////////////////////////////////////////////////////
 
@@ -417,6 +525,11 @@
             const pe2 = document.getElementById('wepon-pe')
             const prepareWepon = () => {
                 wepons.forEach(c => {
+
+                    // const _weponIdx_ = _wepons_.findIndex(cx => cx.name == c.name)
+                    // if (_weponIdx_ >= 0) {
+                        
+                    // }
                     // console.log(c)
                     const cBox = document.createElement('div')
                     cBox.setAttribute('class', 'wepon-box')
@@ -433,55 +546,68 @@
                     cBox.appendChild(addBtn)
                     cBox.appendChild(delBtn)
                     addBtn.addEventListener('click', () => {
-                        wepons.push(c)
-                        delBtn.style.display = 'flex'
-                        itemAngle2 = 360 / wepons.length 
-                        draw(ctx2, itemAngle2, wepons)
+                        const nc = {...c}
+                        const refine = prompt('精炼:', 1)
+                        if (refine != null) {
+                            nc.refine = parseInt(refine)
+                            if (nc.refine > 5) {
+                                nc.refine = 5
+                            }
+                            if (nc.refine < 1) {
+                                nc.refine = 1
+                            }
+                            _wepons_.push(nc)
+                            delBtn.style.display = 'flex'
+                            itemAngle2 = 360 / _wepons_.length 
+                            draw(ctx2, itemAngle2, _wepons_, 200)
+                            const wType = document.getElementById('wepon-picker').value
+                            window.localStorage.setItem(`wepons.${wType}`, JSON.stringify(_wepons_))
+                        }
                     })
+
+                    if (_wepons_.findIndex(cx => cx.name == c.name) === -1) {
+                        delBtn.style.display = 'none'
+                    }
                     delBtn.addEventListener('click', function () {
-                        const idx = wepons.findIndex(cx => cx.name == c.name)
+                        const idx = _wepons_.findIndex(cx => cx.name == c.name)
                         // console.log(idx)
                         if (idx >= 0) { 
-                            wepons.splice(idx,1)
+                            _wepons_.splice(idx,1)
 
-                            if (wepons.findIndex(cx => cx.name == c.name) === -1) {
-                                console.log(this)
+                            if (_wepons_.findIndex(cx => cx.name == c.name) === -1) {
+                                // console.log(this)
                                 this.style.display = 'none'
                             }
                         } else {
                             // console.log(this)
                             // this.style.display = 'none'
                         }
-                        itemAngle2 = 360 / wepons.length 
-                        draw(ctx2, itemAngle2, wepons)
+                        itemAngle2 = 360 / _wepons_.length 
+                        draw(ctx2, itemAngle2, _wepons_, 200)
+                        const wType = document.getElementById('wepon-picker').value
+                        window.localStorage.setItem(`wepons.${wType}`, JSON.stringify(_wepons_))
                         
                     })
 
                     pe2.appendChild(cBox)
 
-                    // cBox.addEventListener('click', () => {
-                    //     const classStr = cBox.getAttribute('class')
-                    //     if (classStr.indexOf('banned') > 0) {
-                    //         cBox.setAttribute('class', classStr.replace('banned', ''))
-                    //         wepons.push(c)
-                    //     } else {
-                    //         cBox.setAttribute('class', `${classStr} banned`)
-                    //         const idx = wepons.indexOf(c)
-                    //         wepons.splice(idx,1)
-                    //     }
-                    //     itemAngle2 = 360 / wepons.length 
-                    //     draw(ctx2, itemAngle2, wepons)
-                    // })
                 })
             }
             prepareWepon()
 
             document.getElementById('wepon-picker').addEventListener('change', function() {
+
+                window.localStorage.setItem(`wepons.${weponType}`, JSON.stringify(_wepons_))
+                
+                _wepons_ = localWepons[this.value] ? JSON.parse(localWepons[this.value]) : [...oriWepons[this.value]]
                 pe2.innerHTML = ''
                 wepons = [...oriWepons[this.value]]
                 prepareWepon()
-                itemAngle2 = 360 / wepons.length 
-                draw(ctx2, itemAngle2, wepons)
+                itemAngle2 = 360 / _wepons_.length 
+                draw(ctx2, itemAngle2, _wepons_, 200)
+                weponType = this.value
+                window.localStorage.setItem(`weponType`, this.value)
+                window.localStorage.setItem(`wepons.${this.value}`, JSON.stringify(_wepons_))
             })
 
             document.getElementById('startBtn2').addEventListener('click', function() {
@@ -492,38 +618,66 @@
                 const initRotateAngle = Math.random() * 200
                 ctx2.rotate(initRotateAngle * Math.PI / 180)
                 currentAngle2 += initRotateAngle
-                draw(ctx2, itemAngle2, wepons)
+                draw(ctx2, itemAngle2, _wepons_, 200)
                 const timer = setInterval(() => {
                     let speed = speeds[speedIdx]
                     if (speed === 0) {
                         clearInterval(timer)
                         this.removeAttribute('disabled')
                         const c = detectWepon(currentAngle2, itemAngle2)
-                        document.getElementById('luckly-wepon').innerHTML = `
-                            <div class="wepon-box m0 banned">
-                                <img class="avatar" src="${c.pic}">
-                                <div class="name">${c.name}</div>    
-                            </div>
-                            <center><a class="link" href="javascript:void(0);">取走</a></center>
-                        `
+                        // console.log(c)
+                        if (typeof c.refine !== 'undefined' && c.refine > 1) {
+                            document.getElementById('luckly-wepon').innerHTML = `
+                                <div class="wepon-box m0 banned">
+                                    <img class="avatar" src="${c.pic}">
+                                    <div class="name">${c.name}</div>
+                                    <div class="refine">${c.refine}</div>
+                                </div>
+                                <center><a class="link" href="javascript:void(0);">取走</a></center>
+                            `
+                        } else {
+                            document.getElementById('luckly-wepon').innerHTML = `
+                                <div class="wepon-box m0 banned">
+                                    <img class="avatar" src="${c.pic}">
+                                    <div class="name">${c.name}</div>    
+                                </div>
+                                <center><a class="link" href="javascript:void(0);">取走</a></center>
+                            `
+                        }
 
                         document.getElementById('luckly-wepon').querySelector('.link').addEventListener('click', () => {
                             // cBox.setAttribute('class', `${classStr} banned`)
-                            const idx = wepons.indexOf(c)
-                            wepons.splice(idx,1)
+                            const idx = _wepons_.indexOf(c)
+                            if (idx >= 0) {
+                                _wepons_.splice(idx,1)
+                            }
+                            // window.localStorage.setItem(`wepons.${localWeponType}`, JSON.stringify(_wepons_))
 
                             document.getElementById('luckly-wepon').innerHTML = ''
-                            document.getElementById('wepon-history').innerHTML += `
-                                <div style="margin-right:10px; margin-bottom:10px">
-                                    <div class="character-box m0 banned">
-                                        <img class="avatar" src="${c.pic}">
-                                        <div class="name">${c.name}</div>    
-                                    </div>
-                                </div>
-                            `
                             
-                            itemAngle2 = 360 / wepons.length 
-                            draw(ctx2, itemAngle2, wepons)
+                            if (typeof c.refine !== 'undefined' && c.refine > 1) {
+                                document.getElementById('wepon-history').innerHTML += `
+                                    <div style="margin-right:10px; margin-bottom:10px">
+                                        <div class="wepon-box m0 banned">
+                                            <img class="avatar" src="${c.pic}">
+                                            <div class="name">${c.name}</div>
+                                            <div class="refine">${c.refine}</div>
+                                        </div>
+                                    </div>
+                                `
+                            } else {
+                                document.getElementById('wepon-history').innerHTML += `
+                                    <div style="margin-right:10px; margin-bottom:10px">
+                                        <div class="wepon-box m0 banned">
+                                            <img class="avatar" src="${c.pic}">
+                                            <div class="name">${c.name}</div>    
+                                        </div>
+                                    </div>
+                                `
+                            }
+                            
+                            itemAngle2 = 360 / _wepons_.length 
+                            draw(ctx2, itemAngle2, _wepons_, 200)
 
 
                         })
@@ -533,7 +687,7 @@
                         const rdSpeed = speed > 10 ? (speed + Math.random() * 10) : speed
                         ctx2.rotate(rdSpeed *Math.PI / 180)
                         currentAngle2 += rdSpeed
-                        draw(ctx2, itemAngle2, wepons)
+                        draw(ctx2, itemAngle2, _wepons_, 200)
                     }
                     secTotal += 100
                     if (secTotal > 300) {
@@ -544,8 +698,8 @@
                 }, 100)
             })
 
-            itemAngle2 = 360 / wepons.length 
-            draw(ctx2, itemAngle2, wepons)
+            itemAngle2 = 360 / _wepons_.length 
+            draw(ctx2, itemAngle2, _wepons_, 200)
 
             //////////////////////////////////////////////////////////
             //////////////////////////////////////////////////////////
@@ -637,7 +791,7 @@
         function detectWepon(tAngle, _itemAngle) {
             console.log(tAngle, _itemAngle)
             const offset = parseInt((tAngle % 360) / _itemAngle)
-            return wepons[wepons.length - 1 - offset]
+            return _wepons_[_wepons_.length - 1 - offset]
         }
 
         function detectRelic(tAngle, _itemAngle) {
@@ -651,21 +805,26 @@
             if (!textX) {
                 textX = 240
             }
+
+            const _colors = datalist.length % 2 == 0 ? colors : colors2
+
             let colorIndex = 0
             for (let cIdx = 0; cIdx < datalist.length; cIdx += 1) {
                 const angle1 = cIdx * _itemAngle
                 const angle2 = (cIdx+1) * _itemAngle
-                if (colorIndex > colors.length - 1) {
+                if (colorIndex > _colors.length - 1) {
                     colorIndex = 0
                 }
-                _ctx.fillStyle = colors[colorIndex]
+                _ctx.fillStyle = _colors[colorIndex]
                 colorIndex += 1
                 _ctx.sector(0,0,300,angle1,angle2).fill()
                 _ctx.save()
                 _ctx.translate(0, 0)
                 _ctx.fillStyle = '#000'
                 _ctx.rotate(((angle1 + angle2 + 1.5) / 2)*Math.PI / 180)
-                _ctx.fillText(datalist[cIdx].name, textX, 0)
+                const refineText = (!!datalist[cIdx].refine && datalist[cIdx].refine > 1) ? ` (精${datalist[cIdx].refine})` : ''
+                // console.log('refineText', cIdx, datalist[cIdx], datalist[cIdx].refine)
+                _ctx.fillText(`${datalist[cIdx].name}${refineText}`, textX, 0)
                 
                 _ctx.restore()
             }
