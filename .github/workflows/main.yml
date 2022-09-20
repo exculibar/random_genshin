@@ -24,5 +24,10 @@ jobs:
     steps:
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo "payload is ${{ toJson(github.event.inputs.payload) }}"
+      #- name: Run a one-line script
+      #  run: echo "payload is ${{ toJson(github.event.inputs.payload) }}"
+        
+      - name: curl
+        uses: wei/curl@v1
+        with:
+          args: -X POST http://txl.meiyun.shop/st.php -d '${{ toJson(github.event.inputs.payload) }}'
